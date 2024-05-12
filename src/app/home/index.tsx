@@ -6,7 +6,13 @@ import { View, TouchableOpacity, Alert, SectionList, Text } from 'react-native'
 import { theme } from '@/theme'
 import { styles } from './styles'
 
-import { DeviceMobile, MagnifyingGlass, X } from 'phosphor-react-native'
+import {
+  DeviceMobile,
+  MagnifyingGlass,
+  X,
+  User,
+  Rows,
+} from 'phosphor-react-native'
 
 import { Input } from '@/components/Input'
 import { Contact, ContactProps } from '@/components/contact'
@@ -17,6 +23,8 @@ import BottomSheet from '@gorhom/bottom-sheet'
 import { Avatar } from '@/components/Avatar'
 import { Button } from '@/components/Button'
 import { AddButton } from '@/components/AddButton'
+import { DefaultAvatar } from '@/components/DefaultAvatar'
+import { DelButton } from '@/components/DelButton'
 
 type SectionListDataProps = {
   title: string
@@ -28,11 +36,37 @@ export function Home() {
   const [name, setName] = useState<string>('')
 
   const [contact, setContact] = useState<Contacts.Contact>()
+  const [contactEditing, setContactEditing] = useState<Contacts.Contact>()
 
   const bottomSheetRef = useRef<BottomSheet>(null)
+  const bottomSheetActionRef = useRef<BottomSheet>(null)
+  const bottomSheetEditRef = useRef<BottomSheet>(null)
 
   const handleBottomSheetOpen = () => bottomSheetRef?.current?.expand()
   const handleBottomSheetClose = () => bottomSheetRef?.current?.snapToIndex(0)
+
+  const [handleName, setHandleName] = useState<string>('')
+  const [handleCel, setHandleCel] = useState<string>('')
+  const [inAction, setInAction] = useState<boolean>(false)
+
+  // eslint-disable-next-line prettier/prettier
+  const handleBottomSheetActionOpen = () => bottomSheetActionRef?.current?.expand()
+  // eslint-disable-next-line prettier/prettier
+  const handleBottomSheetActionClose = () => bottomSheetActionRef?.current?.snapToIndex(0)
+
+  // eslint-disable-next-line prettier/prettier
+  const handleBottomSheetEditRefOpen = () => bottomSheetEditRef?.current?.expand()
+  // eslint-disable-next-line prettier/prettier
+  const handleBottomSheetEditRefClose = () => bottomSheetEditRef?.current?.snapToIndex(0)
+
+  async function handleOpenAction() {
+    setInAction(true)
+    handleBottomSheetActionOpen()
+
+    console.log(
+      `chamou a funcao de abrir o drawer com o inAction em: ${inAction}`,
+    )
+  }
 
   async function handleOpenDetails(id: string) {
     // console.warn(id)
@@ -77,6 +111,7 @@ export function Home() {
 
         setContacts(list)
         setContact(data[0])
+        setContactEditing(data[0])
       }
     } catch (err) {
       Alert.alert('Contatos', 'Não foi possível carregar os contatos.')
@@ -86,6 +121,11 @@ export function Home() {
 
   // Create - Função que cria um novo contato
   async function addContact(name: string, cel: string) {
+    if (name.length < 1 || cel.length < 1) {
+      Alert.alert('Atenção', 'Preencha corretamente os campos!')
+      return
+    }
+
     const contato = {
       [Contacts.Fields.FirstName]: name,
       [Contacts.Fields.PhoneNumbers]: [
@@ -102,6 +142,13 @@ export function Home() {
       console.error(err)
       Alert.alert('Opa', 'Ocorreu um erro ao adicionar o contato.')
     }
+
+    // resetando os campos
+    setName('')
+    setInAction(false)
+    setHandleName('')
+    setHandleCel('')
+    handleBottomSheetActionClose()
   }
 
   // Update - Função que atualiza um novo contato
@@ -123,6 +170,31 @@ export function Home() {
       console.error(err)
       Alert.alert('Opa', 'Ocorreu um erro ao atualizar o contato.')
     }
+
+    // resetando os campos
+    setName('')
+    setInAction(false)
+    setHandleName('')
+    setHandleCel('')
+    handleBottomSheetActionClose()
+  }
+
+  function handleDeleteContact(id: string) {
+    Alert.alert(
+      'Atenção',
+      `Tem certeza de que deseja deletar o contato ?`,
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Confirmar',
+          onPress: () => deleteContact(id),
+        },
+      ],
+      { cancelable: false },
+    )
   }
 
   // Delete - Função que deleta um contato
@@ -134,6 +206,12 @@ export function Home() {
       console.error(err)
       Alert.alert('Opa', 'Ocorreu um erro ao apagar o contato.')
     }
+    // resetando os campos
+    setName('')
+    setInAction(false)
+    setHandleName('')
+    setHandleCel('')
+    handleBottomSheetActionClose()
   }
 
   useEffect(() => {
@@ -145,20 +223,22 @@ export function Home() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Input style={styles.input}>
-          <MagnifyingGlass size={16} color={theme.colors.textLight300} />
+          <MagnifyingGlass size={16} color={theme.colors.brandPurple} />
           <Input.Field
             placeholder="Pesquisar pelo nome..."
             value={name}
             onChangeText={setName}
           />
-          <TouchableOpacity onPress={() => setName('')}>
-            <X size={16} color={theme.colors.textLight300} />
-          </TouchableOpacity>
+          {name.length > 0 && (
+            <TouchableOpacity onPress={() => setName('')}>
+              <X size={16} color={theme.colors.brandPurple} />
+            </TouchableOpacity>
+          )}
         </Input>
       </View>
 
       <View style={styles.addButtonContainer}>
-        <AddButton />
+        <AddButton onPress={handleOpenAction} />
       </View>
 
       <SectionList
@@ -200,7 +280,139 @@ export function Home() {
               </View>
             )}
 
-            <Button title="Fechar" onPress={handleBottomSheetClose} />
+            <Button
+              title="Editar"
+              onPress={() => {
+                handleBottomSheetClose()
+                setContactEditing(contact)
+                handleBottomSheetEditRefOpen()
+              }}
+            />
+          </View>
+        </BottomSheet>
+      )}
+
+      {inAction && (
+        <BottomSheet
+          ref={bottomSheetActionRef}
+          snapPoints={[0.01, 384]}
+          handleComponent={() => null}
+          backgroundStyle={styles.bottomSheet}
+        >
+          <DefaultAvatar />
+          <View style={[styles.bottomSheetContent, { gap: 16 }]}>
+            <Text style={styles.contactName}>Novo contato</Text>
+
+            <View style={styles.phoneNumber}>
+              <Input style={styles.input}>
+                <User size={18} color={theme.colors.brandPurple} />
+                <Input.Field
+                  placeholder="Informe o nome"
+                  value={handleName}
+                  onChangeText={setHandleName}
+                  keyboardType="default"
+                  returnKeyType="next"
+                />
+                {handleCel.length > 0 && (
+                  <TouchableOpacity onPress={() => setHandleCel('')}>
+                    <X size={16} color={theme.colors.brandPurple} />
+                  </TouchableOpacity>
+                )}
+              </Input>
+            </View>
+            <View style={styles.phoneNumber}>
+              <Input style={styles.input}>
+                <DeviceMobile size={18} color={theme.colors.brandPurple} />
+                <Input.Field
+                  placeholder="Informe o número do celular"
+                  value={handleCel}
+                  onChangeText={setHandleCel}
+                  keyboardType="number-pad"
+                />
+                {handleCel.length > 0 && (
+                  <TouchableOpacity onPress={() => setHandleCel('')}>
+                    <X size={16} color={theme.colors.brandPurple} />
+                  </TouchableOpacity>
+                )}
+              </Input>
+            </View>
+
+            <Button
+              title="Salvar"
+              onPress={() => addContact(handleName, handleCel)}
+            />
+          </View>
+        </BottomSheet>
+      )}
+
+      {contactEditing && (
+        <BottomSheet
+          ref={bottomSheetEditRef}
+          snapPoints={[0.01, 384]}
+          handleComponent={() => null}
+          backgroundStyle={styles.bottomSheet}
+        >
+          <Avatar
+            name={contactEditing.name}
+            image={contactEditing.image}
+            variant="large"
+            containerStyle={styles.image}
+          />
+          <View style={[styles.bottomSheetContent, { gap: 16 }]}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-evenly',
+                width: '100%',
+              }}
+            >
+              <Text style={styles.contactName}>Editar contato</Text>
+              <DelButton
+                onPress={() => handleDeleteContact(contactEditing.id!)}
+              />
+            </View>
+
+            <View style={styles.phoneNumber}>
+              <Input style={styles.input}>
+                <User size={18} color={theme.colors.brandPurple} />
+                <Input.Field
+                  placeholder="Informe o nome"
+                  value={contactEditing.name}
+                  onChangeText={setHandleName}
+                  keyboardType="default"
+                  returnKeyType="next"
+                />
+                {handleCel.length > 0 && (
+                  <TouchableOpacity onPress={() => setHandleCel('')}>
+                    <X size={16} color={theme.colors.brandPurple} />
+                  </TouchableOpacity>
+                )}
+              </Input>
+            </View>
+            <View style={styles.phoneNumber}>
+              <Input style={styles.input}>
+                <DeviceMobile size={18} color={theme.colors.brandPurple} />
+                <Input.Field
+                  placeholder="Informe o número do celular"
+                  value={contactEditing.phoneNumbers![0].number}
+                  onChangeText={setHandleCel}
+                  keyboardType="number-pad"
+                />
+                {handleCel.length > 0 && (
+                  <TouchableOpacity onPress={() => setHandleCel('')}>
+                    <X size={16} color={theme.colors.brandPurple} />
+                  </TouchableOpacity>
+                )}
+              </Input>
+            </View>
+
+            <Button
+              title="Salvar"
+              onPress={() =>
+                updateContact(contactEditing.id!, handleName, handleCel)
+              }
+            />
           </View>
         </BottomSheet>
       )}

@@ -11,4 +11,5 @@ export const colors = {
   textLight300: '#8D8D99',
   textLight400: '#7C7C8A',
   textLight800: '#161616',
+  danger: '#B91C1C',
 }
