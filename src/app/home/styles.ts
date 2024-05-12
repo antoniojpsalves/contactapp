@@ -34,4 +34,11 @@ export const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 64,
   },
+  separator: {
+    borderBottomWidth: 1,
+    borderColor: theme.colors.textLight300,
+    marginTop: 12,
+    width: '80%',
+    alignSelf: 'center',
+  },
 })

@@ -27,6 +27,7 @@ export function Home() {
 
       if (status === Contacts.PermissionStatus.GRANTED) {
         const { data } = await Contacts.getContactsAsync({
+          name,
           sort: 'firstName',
         })
         const list = data
@@ -63,7 +64,8 @@ export function Home() {
 
   useEffect(() => {
     fetchContacts()
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [name])
 
   return (
     <View style={styles.container}>
@@ -88,6 +90,7 @@ export function Home() {
         renderSectionHeader={({ section }) => (
           <Text style={styles.section}>{section.title}</Text>
         )}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
         contentContainerStyle={styles.contentList}
         showsVerticalScrollIndicator={false}
       />
