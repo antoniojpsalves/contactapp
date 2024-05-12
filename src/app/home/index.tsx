@@ -44,7 +44,7 @@ export function Home() {
   const [inAction, setInAction] = useState<boolean>(false)
 
   const [newName, setNewName] = useState<string>('')
-  const [newNumber, setNewNumber] = useState<string | undefined>('')
+  const [newNumber, setNewNumber] = useState<string>('')
 
   // eslint-disable-next-line prettier/prettier
   const handleBottomSheetActionOpen = () => bottomSheetActionRef?.current?.expand()
@@ -284,7 +284,7 @@ export function Home() {
                 handleBottomSheetEditRefOpen()
 
                 setNewName(contact.name)
-                setNewNumber(contact.phoneNumbers![0].number)
+                setNewNumber(contact.phoneNumbers![0].number ?? '')
               }}
             />
           </View>
@@ -409,7 +409,7 @@ export function Home() {
             <Button
               title="Salvar"
               onPress={() =>
-                updateContact(contactEditing.id!, handleName, handleCel)
+                updateContact(contactEditing.id!, newName, newNumber)
               }
             />
           </View>
