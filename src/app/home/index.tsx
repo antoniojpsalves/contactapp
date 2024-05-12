@@ -6,13 +6,7 @@ import { View, TouchableOpacity, Alert, SectionList, Text } from 'react-native'
 import { theme } from '@/theme'
 import { styles } from './styles'
 
-import {
-  DeviceMobile,
-  MagnifyingGlass,
-  X,
-  User,
-  Rows,
-} from 'phosphor-react-native'
+import { DeviceMobile, MagnifyingGlass, X, User } from 'phosphor-react-native'
 
 import { Input } from '@/components/Input'
 import { Contact, ContactProps } from '@/components/contact'
@@ -49,6 +43,9 @@ export function Home() {
   const [handleCel, setHandleCel] = useState<string>('')
   const [inAction, setInAction] = useState<boolean>(false)
 
+  const [newName, setNewName] = useState<string>('')
+  const [newNumber, setNewNumber] = useState<string | undefined>('')
+
   // eslint-disable-next-line prettier/prettier
   const handleBottomSheetActionOpen = () => bottomSheetActionRef?.current?.expand()
   // eslint-disable-next-line prettier/prettier
@@ -62,10 +59,6 @@ export function Home() {
   async function handleOpenAction() {
     setInAction(true)
     handleBottomSheetActionOpen()
-
-    console.log(
-      `chamou a funcao de abrir o drawer com o inAction em: ${inAction}`,
-    )
   }
 
   async function handleOpenDetails(id: string) {
@@ -149,6 +142,7 @@ export function Home() {
     setHandleName('')
     setHandleCel('')
     handleBottomSheetActionClose()
+    handleBottomSheetEditRefClose()
   }
 
   // Update - Função que atualiza um novo contato
@@ -177,6 +171,7 @@ export function Home() {
     setHandleName('')
     setHandleCel('')
     handleBottomSheetActionClose()
+    handleBottomSheetEditRefClose()
   }
 
   function handleDeleteContact(id: string) {
@@ -212,6 +207,7 @@ export function Home() {
     setHandleName('')
     setHandleCel('')
     handleBottomSheetActionClose()
+    handleBottomSheetEditRefClose()
   }
 
   useEffect(() => {
@@ -286,6 +282,9 @@ export function Home() {
                 handleBottomSheetClose()
                 setContactEditing(contact)
                 handleBottomSheetEditRefOpen()
+
+                setNewName(contact.name)
+                setNewNumber(contact.phoneNumbers![0].number)
               }}
             />
           </View>
@@ -378,8 +377,8 @@ export function Home() {
                 <User size={18} color={theme.colors.brandPurple} />
                 <Input.Field
                   placeholder="Informe o nome"
-                  value={contactEditing.name}
-                  onChangeText={setHandleName}
+                  value={newName}
+                  onChangeText={setNewName}
                   keyboardType="default"
                   returnKeyType="next"
                 />
@@ -395,8 +394,8 @@ export function Home() {
                 <DeviceMobile size={18} color={theme.colors.brandPurple} />
                 <Input.Field
                   placeholder="Informe o número do celular"
-                  value={contactEditing.phoneNumbers![0].number}
-                  onChangeText={setHandleCel}
+                  value={newNumber}
+                  onChangeText={setNewNumber}
                   keyboardType="number-pad"
                 />
                 {handleCel.length > 0 && (
