@@ -1,13 +1,14 @@
 import { useState } from 'react'
 
-import { styles } from './styles'
-
 import { View, TouchableOpacity } from 'react-native'
+
+import { theme } from '@/theme'
+import { styles } from './styles'
 
 import { MagnifyingGlass, X } from 'phosphor-react-native'
 
 import { Input } from '@/components/Input'
-import { theme } from '@/theme'
+import { Contact } from '@/components/contact'
 
 export function Home() {
   const [name, setName] = useState<string>('')
@@ -27,6 +28,12 @@ export function Home() {
           </TouchableOpacity>
         </Input>
       </View>
+
+      <Contact
+        contact={{
+          name: 'Antonio Alves',
+        }}
+      />
     </View>
   )
 }
