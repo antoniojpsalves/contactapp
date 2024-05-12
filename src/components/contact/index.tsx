@@ -8,6 +8,7 @@ import { styles } from './styles'
 import { Avatar } from '@/components/Avatar'
 
 export type ContactProps = {
+  id: string
   name: string
   image?: ImageProps
 }

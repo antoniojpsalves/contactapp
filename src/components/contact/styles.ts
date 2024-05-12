@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     gap: 12,
   },
   name: {
-    color: theme.colors.black,
+    color: theme.colors.white,
     fontFamily: theme.fontFamily.medium,
     fontSize: 18,
   },
