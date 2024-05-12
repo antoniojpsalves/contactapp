@@ -4,9 +4,11 @@ export const colors = {
   white: '#F6F6F6',
   black: '#171717',
 
-  brandPurple: '#8257E6',
+  brandPurple: '#6D28D9',
 
-  textLight0: '#FCFCFC',
-  textLight50: '#F5F5F5',
-  textLight100: '#E5E5E5',
+  textLight100: '#EBEBEB',
+  textLight200: '#C4C4C4',
+  textLight300: '#8D8D99',
+  textLight400: '#7C7C8A',
+  textLight800: '#161616',
 }

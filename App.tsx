@@ -23,6 +23,7 @@ export default function App() {
     <View
       style={{
         flex: 1,
+        width: '100%',
         backgroundColor: theme.colors.backgroundDark,
         alignItems: 'center',
         justifyContent: 'center',

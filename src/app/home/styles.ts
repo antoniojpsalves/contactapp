@@ -7,10 +7,13 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   header: {
-    backgroundColor: theme.colors.brandPurple,
+    width: '100%',
     height: 132,
+    backgroundColor: theme.colors.brandPurple,
+    justifyContent: 'flex-end',
+    paddingHorizontal: 24,
   },
-  heading: {
-    color: theme.colors.textLight0,
+  input: {
+    marginBottom: -27,
   },
 })
