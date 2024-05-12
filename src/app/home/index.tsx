@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect, useId, useRef } from 'react'
 
 import { View, TouchableOpacity, Alert, SectionList, Text } from 'react-native'
@@ -15,6 +16,7 @@ import * as Contacts from 'expo-contacts'
 import BottomSheet from '@gorhom/bottom-sheet'
 import { Avatar } from '@/components/Avatar'
 import { Button } from '@/components/Button'
+import { AddButton } from '@/components/AddButton'
 
 type SectionListDataProps = {
   title: string
@@ -82,6 +84,58 @@ export function Home() {
     }
   }
 
+  // Create - Função que cria um novo contato
+  async function addContact(name: string, cel: string) {
+    const contato = {
+      [Contacts.Fields.FirstName]: name,
+      [Contacts.Fields.PhoneNumbers]: [
+        {
+          label: 'mobile',
+          number: cel,
+        },
+      ],
+    } as Contacts.Contact
+    try {
+      await Contacts.addContactAsync(contato)
+      Alert.alert('Boa', 'novo contato adicionado!')
+    } catch (err) {
+      console.error(err)
+      Alert.alert('Opa', 'Ocorreu um erro ao adicionar o contato.')
+    }
+  }
+
+  // Update - Função que atualiza um novo contato
+  async function updateContact(id: string, name: string, cel: string) {
+    const contato = {
+      id,
+      [Contacts.Fields.FirstName]: name,
+      [Contacts.Fields.PhoneNumbers]: [
+        {
+          label: 'mobile',
+          number: cel,
+        },
+      ],
+    } as Contacts.Contact
+    try {
+      await Contacts.updateContactAsync(contato)
+      Alert.alert('Boa', 'novo contato atualizado!')
+    } catch (err) {
+      console.error(err)
+      Alert.alert('Opa', 'Ocorreu um erro ao atualizar o contato.')
+    }
+  }
+
+  // Delete - Função que deleta um contato
+  async function deleteContact(id: string) {
+    try {
+      await Contacts.removeContactAsync(id)
+      Alert.alert('Feito', 'contato removido!')
+    } catch (err) {
+      console.error(err)
+      Alert.alert('Opa', 'Ocorreu um erro ao apagar o contato.')
+    }
+  }
+
   useEffect(() => {
     fetchContacts()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,6 +155,10 @@ export function Home() {
             <X size={16} color={theme.colors.textLight300} />
           </TouchableOpacity>
         </Input>
+      </View>
+
+      <View style={styles.addButtonContainer}>
+        <AddButton />
       </View>
 
       <SectionList

@@ -14,6 +14,14 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 24,
     zIndex: 1,
   },
+  addButtonContainer: {
+    marginTop: 40,
+    height: 40,
+    width: '100%',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    paddingHorizontal: 26,
+  },
   input: {
     marginBottom: -27,
   },
@@ -27,12 +35,12 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     borderRadius: 12,
-    marginTop: 32,
+    marginTop: 12,
   },
   contentList: {
     gap: 12,
     padding: 24,
-    paddingTop: 64,
+    paddingTop: 16,
   },
   separator: {
     borderBottomWidth: 1,
