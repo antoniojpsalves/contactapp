@@ -41,4 +41,36 @@ export const styles = StyleSheet.create({
     width: '80%',
     alignSelf: 'center',
   },
+  bottomSheet: {
+    backgroundColor: 'transparent',
+  },
+  bottomSheetContent: {
+    flex: 1,
+    backgroundColor: theme.colors.textLight100,
+    borderTopStartRadius: 32,
+    borderTopEndRadius: 32,
+    paddingTop: 64,
+    alignItems: 'center',
+    padding: 32,
+  },
+  image: {
+    marginBottom: -50,
+    zIndex: 1,
+    alignSelf: 'center',
+  },
+  contactName: {
+    fontSize: 24,
+    fontFamily: theme.fontFamily.bold,
+  },
+  phoneNumber: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    marginBottom: 24,
+  },
+  phone: {
+    fontSize: 18,
+    fontFamily: theme.fontFamily.medium,
+    color: theme.colors.textLight400,
+  },
 })

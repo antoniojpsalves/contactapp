@@ -1,5 +1,7 @@
 /* eslint-disable camelcase */
-import { StatusBar, View } from 'react-native'
+import { StatusBar } from 'react-native'
+
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import {
   useFonts,
@@ -20,7 +22,7 @@ export default function App() {
     Inter_700Bold,
   })
   return (
-    <View
+    <GestureHandlerRootView
       style={{
         flex: 1,
         width: '100%',
@@ -35,6 +37,6 @@ export default function App() {
         translucent
       />
       {!fontsLoaded ? <Loading /> : <Home />}
-    </View>
+    </GestureHandlerRootView>
   )
 }
